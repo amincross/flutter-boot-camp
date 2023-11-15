@@ -5,11 +5,20 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Text("ClickMe!"),
-      ),
-    );
+    return Scaffold(
+        appBar: AppBar(),
+        body: Container(
+          margin: EdgeInsets.all(12),
+          child: Column(
+            children: [
+              Text("Register Form!"),
+              TextField(),
+              TextField(),
+              TextField(),
+              TextField(),
+              ElevatedButton(onPressed: () {}, child: Text("Submit"))
+            ],
+          ),
+        ));
   }
 }
