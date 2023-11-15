@@ -7,18 +7,18 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
-        body: Container(
-          margin: EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Text("Register Form!"),
-              TextField(),
-              TextField(),
-              TextField(),
-              TextField(),
-              ElevatedButton(onPressed: () {}, child: Text("Submit"))
-            ],
-          ),
+        body: Row(
+          children: [
+            Text("Menu 1"),
+            Text("Menu 2"),
+            Text("Menu 3"),
+            Text("Menu 4"),
+            Container(
+              width: 15,
+              height: 10,
+            ),
+            Text("Menu 5"),
+          ],
         ));
   }
 }
