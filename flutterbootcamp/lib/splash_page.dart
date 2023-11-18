@@ -11,6 +11,7 @@ class SplashPage extends StatelessWidget {
           children: [
             Text("Menu 1"),
             Text("Menu 2"),
+            SizedBox(width: 15, height: 15),
             Text("Menu 3"),
             Text("Menu 4"),
             Container(
