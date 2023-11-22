@@ -51,10 +51,13 @@ class SignUpPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                 child: Column(
                   children: [
-                    TextField(decoration: InputDecoration(hintText: "your email here")),
-                    TextField(decoration: InputDecoration(hintText: "full name")),
-                    TextField(decoration: InputDecoration(hintText: "phone number")),
-                    TextField(decoration: InputDecoration(hintText: "password")),
+                    TextField(keyboardType: TextInputType.emailAddress, decoration: InputDecoration(hintText: "your email here")),
+                    TextField(keyboardType: TextInputType.name, decoration: InputDecoration(hintText: "full name")),
+                    TextField(keyboardType: TextInputType.phone, decoration: InputDecoration(hintText: "phone number")),
+                    TextField(
+                        obscureText: true,
+                        keyboardType: TextInputType.visiblePassword,
+                        decoration: InputDecoration(hintText: "password")),
                     Expanded(child: Container()),
                     FloatingActionButton(
                       onPressed: () {},
