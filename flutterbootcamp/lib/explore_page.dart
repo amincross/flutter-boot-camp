@@ -27,6 +27,10 @@ class _ExplorePageState extends State<ExplorePage> {
 
   int selectedIndex = 0;
 
+  bool isList = true; //grid
+
+  String dolor = "\$";
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -67,7 +71,18 @@ class _ExplorePageState extends State<ExplorePage> {
                     ],
                   ),
                   Expanded(child: Container()),
-                  Icon(Icons.grid_view_rounded)
+                  InkWell(
+                    child: Icon((isList == true) ? Icons.list : Icons.grid_view_rounded),
+                    onTap: () {
+                      if (isList == true) {
+                        isList = false;
+                      } else {
+                        isList = true;
+                      }
+
+                      setState(() {});
+                    },
+                  )
                 ],
               ),
             ),
@@ -118,40 +133,115 @@ class _ExplorePageState extends State<ExplorePage> {
                 itemCount: categoriesList.length,
               ),
             ),
-            Container(
-              width: screenSize.width,
-              height: 200,
-              color: Colors.green,
-              child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: screenSize.width - 50,
-                      height: 80,
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            productList[index].imageAddress,
-                            width: 50,
-                            height: 80,
-                            fit: BoxFit.fitWidth,
-                          ),
-                          Column(
-                            children: [
-                              Text(productList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                              Text(productList[index].description, style: TextStyle(fontSize: 16)),
-                              Text(productList[index].price.toString(), style: TextStyle(fontSize: 16)),
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                  itemCount: productList.length),
-            )
+            makeMyListView(),
           ],
         ),
       ),
     );
+  }
+
+  makeMyListView() {
+    Size screenSize = MediaQuery.of(context).size;
+
+    if (isList == true) {
+      return SizedBox(
+        height: 500,
+        child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    width: screenSize.width - 50,
+                    height: 120,
+                    child: Row(
+                      children: [
+                        Container(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.asset(
+                              productList[index].imageAddress,
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                          margin: EdgeInsets.symmetric(horizontal: 8),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(productList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                            Text(productList[index].description, style: TextStyle(fontSize: 16)),
+                            Text(
+                              dolor + productList[index].price.toString(),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: screenSize.width - 100,
+                    height: 1,
+                    color: Colors.grey.withOpacity(0.5),
+                  )
+                ],
+              );
+            },
+            itemCount: productList.length),
+      );
+    } else {
+      return Container(
+          height: 500,
+          margin: EdgeInsets.only(left: 12, top: 12, right: 12),
+          child: GridView.count(
+            crossAxisCount: 2,
+            children: List<Widget>.generate(productList.length, (index) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.asset(
+                            productList[index].imageAddress,
+                            //width: 120,
+                            height: 150,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                        margin: EdgeInsets.symmetric(vertical: 4),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8, right: 36),
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(50))),
+                          child: Icon(
+                            Icons.favorite,
+                            color: Colors.grey,
+                          ))
+                    ],
+                  ),
+                  Text(productList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4),
+                  Text(productList[index].description, style: TextStyle(fontSize: 16)),
+                  SizedBox(height: 4),
+                  Text(
+                    dolor + productList[index].price.toString(),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              );
+            }),
+          ));
+    }
   }
 }
 
