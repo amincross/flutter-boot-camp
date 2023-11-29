@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterbootcamp/show_product_page.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -16,12 +17,12 @@ class _ExplorePageState extends State<ExplorePage> {
   ];
 
   List<Product> productList = [
-    Product("Product 1", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", true),
+    Product("Product 1", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
     Product("Product 2", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-    Product("Product 3", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", true),
+    Product("Product 3", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
     Product("Product 4", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
     Product("Product 5", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-    Product("Product 6", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", true),
+    Product("Product 6", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
     Product("Product 7", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
   ];
 
@@ -149,47 +150,52 @@ class _ExplorePageState extends State<ExplorePage> {
         child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    width: screenSize.width - 50,
-                    height: 120,
-                    child: Row(
-                      children: [
-                        Container(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.asset(
-                              productList[index].imageAddress,
-                              width: 120,
-                              height: 120,
-                              fit: BoxFit.fitHeight,
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ShowProductPage(productList[index])));
+                },
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      width: screenSize.width - 50,
+                      height: 120,
+                      child: Row(
+                        children: [
+                          Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.asset(
+                                productList[index].imageAddress,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.fitHeight,
+                              ),
                             ),
+                            margin: EdgeInsets.symmetric(horizontal: 8),
                           ),
-                          margin: EdgeInsets.symmetric(horizontal: 8),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(productList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                            Text(productList[index].description, style: TextStyle(fontSize: 16)),
-                            Text(
-                              dolor + productList[index].price.toString(),
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )
-                      ],
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(productList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                              Text(productList[index].description, style: TextStyle(fontSize: 16)),
+                              Text(
+                                dolor + productList[index].price.toString(),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    width: screenSize.width - 100,
-                    height: 1,
-                    color: Colors.grey.withOpacity(0.5),
-                  )
-                ],
+                    Container(
+                      width: screenSize.width - 100,
+                      height: 1,
+                      color: Colors.grey.withOpacity(0.5),
+                    )
+                  ],
+                ),
               );
             },
             itemCount: productList.length),
@@ -201,43 +207,63 @@ class _ExplorePageState extends State<ExplorePage> {
           child: GridView.count(
             crossAxisCount: 2,
             children: List<Widget>.generate(productList.length, (index) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            productList[index].imageAddress,
-                            //width: 120,
-                            height: 150,
-                            fit: BoxFit.fitHeight,
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ShowProductPage(productList[index])));
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.asset(
+                              productList[index].imageAddress,
+                              //width: 120,
+                              height: 150,
+                              fit: BoxFit.fitHeight,
+                            ),
                           ),
+                          margin: EdgeInsets.symmetric(vertical: 4),
                         ),
-                        margin: EdgeInsets.symmetric(vertical: 4),
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(top: 8, right: 36),
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(50))),
-                          child: Icon(
-                            Icons.favorite,
-                            color: Colors.grey,
-                          ))
-                    ],
-                  ),
-                  Text(productList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 4),
-                  Text(productList[index].description, style: TextStyle(fontSize: 16)),
-                  SizedBox(height: 4),
-                  Text(
-                    dolor + productList[index].price.toString(),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
+                        Positioned(
+                          right: -30,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (productList[index].isFavorite == true) {
+                                  productList[index].isFavorite = false;
+                                } else {
+                                  productList[index].isFavorite = true;
+                                }
+                              });
+                            },
+                            child: Container(
+                                margin: EdgeInsets.only(top: 8, right: 36),
+                                padding: EdgeInsets.all(4),
+                                decoration:
+                                    BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(50))),
+                                child: Icon(
+                                  Icons.favorite,
+                                  color: (productList[index].isFavorite == true) ? Colors.red : Colors.grey,
+                                )),
+                          ),
+                        )
+                      ],
+                    ),
+                    Text(productList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 4),
+                    Text(productList[index].description, style: TextStyle(fontSize: 16)),
+                    SizedBox(height: 4),
+                    Text(
+                      dolor + productList[index].price.toString(),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               );
             }),
           ));
