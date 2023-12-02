@@ -209,7 +209,10 @@ class _ExplorePageState extends State<ExplorePage> {
             children: List<Widget>.generate(productList.length, (index) {
               return InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ShowProductPage(productList[index])));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ShowProductPage(productList[index])),
+                  );
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

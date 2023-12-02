@@ -12,8 +12,8 @@ class ShowProductPage extends StatefulWidget {
 }
 
 class _ShowProductPageState extends State<ShowProductPage> {
-  String? selectedColor = "Red";
-  String? selectedSize = "L";
+  String? selectedColor = null;
+  String? selectedSize = null;
 
   int selectedCount = 1;
 
@@ -23,7 +23,6 @@ class _ShowProductPageState extends State<ShowProductPage> {
     String dolor = "\$";
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.white, elevation: 0),
       body: Container(
         child: Stack(
           children: [
@@ -31,12 +30,25 @@ class _ShowProductPageState extends State<ShowProductPage> {
               widget.product.imageAddress,
               fit: BoxFit.fitHeight,
               width: screenSize.width,
-              height: screenSize.height * 0.6,
+              height: screenSize.height * 0.8,
+            ),
+            AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              actions: [
+                Icon(Icons.favorite),
+                SizedBox(width: 12),
+                Icon(Icons.shopping_basket),
+                SizedBox(width: 12),
+              ],
             ),
             Align(
               alignment: Alignment.bottomCenter,
               child: ClipRRect(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
                 child: Container(
                   color: Colors.white,
                   height: screenSize.height * 0.4,
@@ -70,6 +82,7 @@ class _ShowProductPageState extends State<ShowProductPage> {
                                 border: Border.all(color: Color(0xffad7474)),
                                 borderRadius: BorderRadius.all(Radius.circular(20))),
                             child: DropdownButton<String>(
+                              value: selectedColor,
                               icon: Icon(
                                 Icons.arrow_drop_down,
                                 color: Colors.white,
@@ -95,6 +108,7 @@ class _ShowProductPageState extends State<ShowProductPage> {
                                 border: Border.all(color: Color(0xffad7474)),
                                 borderRadius: BorderRadius.all(Radius.circular(20))),
                             child: DropdownButton<String>(
+                              value: selectedSize,
                               icon: Icon(Icons.arrow_drop_down, color: Colors.white),
                               items: <String>['L', 'M', 'XM', 'XL'].map((String value) {
                                 return DropdownMenuItem<String>(
@@ -144,7 +158,7 @@ class _ShowProductPageState extends State<ShowProductPage> {
                             ],
                           )),
                       Container(
-                        width: 150,
+                        width: 250,
                         padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                         decoration: BoxDecoration(
                             color: Color(0xff545454),
