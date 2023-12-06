@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutterbootcamp/show_product_page.dart';
 
@@ -46,11 +48,10 @@ class _ExplorePageState extends State<ExplorePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset(
-              "assets/images/image1.jpg",
+            Container(
               width: screenSize.width,
               height: 250,
-              fit: BoxFit.fitWidth,
+              child: makeMySlider(),
             ),
             Container(
               margin: EdgeInsets.all(12),
@@ -141,12 +142,60 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
+  List<String> sliderUrls = [
+    "https://fastly.picsum.photos/id/999/536/354.jpg?hmac=xYKikWHOVjOpBeVAsIlSzDv9J0UYTj_tNODJCKJsDo4",
+    "https://fastly.picsum.photos/id/237/536/354.jpg?hmac=i0yVXW1ORpyCZpQ-CknuyV-jbtU7_x9EBQVhvT5aRr0",
+    "https://fastly.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA",
+    "https://fastly.picsum.photos/id/1060/536/354.jpg?blur=2&hmac=0zJLs1ar00sBbW5Ahd_4zA6pgZqCVavwuHToO6VtcYY"
+  ];
+
+  final PageController controller = PageController(initialPage: 0);
+
+  Widget makeMySlider() {
+    var screenSize = MediaQuery.of(context).size;
+
+    return PageView.builder(
+        controller: controller,
+        itemBuilder: (context, index) {
+          return Image.network(
+            sliderUrls[index],
+            width: screenSize.width,
+            fit: BoxFit.fitWidth,
+          );
+        },
+        itemCount: sliderUrls.length);
+  }
+
+  @override
+  void initState() {
+    startTimer();
+    super.initState();
+  }
+
+  void startTimer() {
+    Duration duration = Duration(seconds: 3);
+
+    Timer.periodic(duration, (timer) {
+      int sliderPageIndex = controller.page!.toInt() ?? 0;
+
+      if (sliderPageIndex < (sliderUrls.length - 1)) {
+        sliderPageIndex++;
+      } else {
+        sliderPageIndex = 0;
+      }
+
+      controller.jumpToPage(sliderPageIndex);
+
+      print("currentPage:" + sliderPageIndex.toString());
+    });
+  }
+
   makeMyListView() {
     Size screenSize = MediaQuery.of(context).size;
 
     if (isList == true) {
       return SizedBox(
-        height: 500,
+        height: productList.length * 150,
         child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
