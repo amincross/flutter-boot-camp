@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'explore_page.dart';
 
@@ -38,7 +41,11 @@ class _ShowProductPageState extends State<ShowProductPage> {
               actions: [
                 Icon(Icons.favorite),
                 SizedBox(width: 12),
-                Icon(Icons.shopping_basket),
+                InkWell(
+                    onTap: () {
+                      readFromStorage();
+                    },
+                    child: Icon(Icons.shopping_basket)),
                 SizedBox(width: 12),
               ],
             ),
@@ -157,25 +164,30 @@ class _ShowProductPageState extends State<ShowProductPage> {
                               ),
                             ],
                           )),
-                      Container(
-                        width: 250,
-                        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                        decoration: BoxDecoration(
-                            color: Color(0xff545454),
-                            border: Border.all(color: Color(0xff545454)),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.shopping_bag_outlined,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              "Add To Bag",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
+                      InkWell(
+                        onTap: () {
+                          addToBag();
+                        },
+                        child: Container(
+                          width: 250,
+                          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                          decoration: BoxDecoration(
+                              color: Color(0xff545454),
+                              border: Border.all(color: Color(0xff545454)),
+                              borderRadius: BorderRadius.all(Radius.circular(20))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.shopping_bag_outlined,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                "Add To Bag",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
+                          ),
                         ),
                       )
                     ],
@@ -187,5 +199,32 @@ class _ShowProductPageState extends State<ShowProductPage> {
         ),
       ),
     );
+  }
+
+  void addToBag() async {
+    //باز کردن حافظه و ارتباط با حافظه
+    final SharedPreferences storage = await SharedPreferences.getInstance();
+
+    //خواندن جیسون محصولات حافظه
+    List<dynamic> json = jsonDecode(storage.containsKey("cart") ? storage.getString("cart")! : '[]');
+
+    //تبدیل جیسون به مدل محصول در لیست
+    List<Product> itemsList = List<Product>.from(json.map<Product>((dynamic i) => Product.fromJson(i)));
+
+    //افزودن محصول باز شده به لیست قبل
+    itemsList.add(widget.product);
+
+    // ذخیره کل لیست
+    await storage.setString('cart', jsonEncode(itemsList).toString());
+  }
+
+  void readFromStorage() async {
+    final SharedPreferences storage = await SharedPreferences.getInstance();
+
+    //خواندن جیسون محصولات حافظه
+    List<dynamic> json = jsonDecode(storage.containsKey("cart") ? storage.getString("cart")! : '[]');
+
+    //تبدیل جیسون به مدل محصول در لیست
+    List<Product> itemsList = List<Product>.from(json.map<Product>((dynamic i) => Product.fromJson(i)));
   }
 }

@@ -155,6 +155,7 @@ class _ExplorePageState extends State<ExplorePage> {
     var screenSize = MediaQuery.of(context).size;
 
     return PageView.builder(
+        scrollDirection: Axis.horizontal,
         controller: controller,
         itemBuilder: (context, index) {
           return Image.network(
@@ -186,7 +187,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
       controller.jumpToPage(sliderPageIndex);
 
-      print("currentPage:" + sliderPageIndex.toString());
+      //print("currentPage:" + sliderPageIndex.toString());
     });
   }
 
@@ -331,4 +332,22 @@ class Product {
   bool isFavorite;
 
   Product(this.name, this.description, this.price, this.imageAddress, this.isFavorite);
+
+  factory Product.fromJson(Map<String, dynamic> json) => Product(
+        json["name"],
+        json["description"],
+        json["price"],
+        json["imageAddress"],
+        json["isFavorite"],
+      );
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": this.name,
+      "description": this.description,
+      "price": this.price,
+      "imageAddress": this.imageAddress,
+      "isFavorite": this.isFavorite
+    };
+  }
 }
