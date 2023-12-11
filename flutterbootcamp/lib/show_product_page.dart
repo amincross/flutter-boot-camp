@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'bag_page.dart';
 import 'explore_page.dart';
 
 class ShowProductPage extends StatefulWidget {
@@ -43,7 +44,7 @@ class _ShowProductPageState extends State<ShowProductPage> {
                 SizedBox(width: 12),
                 InkWell(
                     onTap: () {
-                      readFromStorage();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BagPage()));
                     },
                     child: Icon(Icons.shopping_basket)),
                 SizedBox(width: 12),
@@ -216,15 +217,5 @@ class _ShowProductPageState extends State<ShowProductPage> {
 
     // ذخیره کل لیست
     await storage.setString('cart', jsonEncode(itemsList).toString());
-  }
-
-  void readFromStorage() async {
-    final SharedPreferences storage = await SharedPreferences.getInstance();
-
-    //خواندن جیسون محصولات حافظه
-    List<dynamic> json = jsonDecode(storage.containsKey("cart") ? storage.getString("cart")! : '[]');
-
-    //تبدیل جیسون به مدل محصول در لیست
-    List<Product> itemsList = List<Product>.from(json.map<Product>((dynamic i) => Product.fromJson(i)));
   }
 }
