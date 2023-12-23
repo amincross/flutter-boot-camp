@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bag_page.dart';
@@ -30,7 +31,7 @@ class _ShowProductPageState extends State<ShowProductPage> {
       body: Container(
         child: Stack(
           children: [
-            Image.asset(
+            Image.network(
               widget.product.imageAddress,
               fit: BoxFit.fitHeight,
               width: screenSize.width,
@@ -217,5 +218,13 @@ class _ShowProductPageState extends State<ShowProductPage> {
 
     // ذخیره کل لیست
     await storage.setString('cart', jsonEncode(itemsList).toString());
+
+    Fluttertoast.showToast(
+        msg: "محصول به سبد اضافه شد",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        textColor: Colors.black,
+        fontSize: 16.0);
   }
 }

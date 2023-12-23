@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutterbootcamp/show_product_page.dart';
 
+import 'api_service.dart';
+
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
 
@@ -11,22 +13,9 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<String> categoriesList = [
-    "All",
-    "Blazers",
-    "Jackets",
-    "Dress",
-  ];
+  List<String> categoriesList = [];
 
-  List<Product> productList = [
-    Product("Product 1", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-    Product("Product 2", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-    Product("Product 3", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-    Product("Product 4", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-    Product("Product 5", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-    Product("Product 6", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-    Product("Product 7", "aeofjwefjwioejfiowefjwiefj", 1023, "assets/images/image1.jpg", false),
-  ];
+  List<Product> productList = [];
 
   int selectedIndex = 0;
 
@@ -67,7 +56,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        "150 Items Found",
+                        productList.length.toString() + " Items Found",
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],
@@ -91,49 +80,51 @@ class _ExplorePageState extends State<ExplorePage> {
             Container(
               width: screenSize.width,
               height: 30,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  Color backColor = Colors.white;
-                  Color borderColor = Color(0xff000000);
-                  Color textColor = Color(0xff000000);
+              child: (categoriesList.isEmpty)
+                  ? SizedBox(width: 50, height: 50, child: CircularProgressIndicator())
+                  : ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        Color backColor = Colors.white;
+                        Color borderColor = Color(0xff000000);
+                        Color textColor = Color(0xff000000);
 
-                  if (index == selectedIndex) {
-                    backColor = Color(0xffb24040);
-                    borderColor = Color(0xffb24040);
-                    textColor = Colors.white;
-                  } else {
-                    backColor = Colors.white;
-                    borderColor = Color(0xff000000);
-                    textColor = Color(0xff000000);
-                  }
+                        if (index == selectedIndex) {
+                          backColor = Color(0xffb24040);
+                          borderColor = Color(0xffb24040);
+                          textColor = Colors.white;
+                        } else {
+                          backColor = Colors.white;
+                          borderColor = Color(0xff000000);
+                          textColor = Color(0xff000000);
+                        }
 
-                  return InkWell(
-                    onTap: () {
-                      selectedIndex = index;
+                        return InkWell(
+                          onTap: () {
+                            selectedIndex = index;
 
-                      setState(() {});
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: screenSize.width * 0.20,
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                          color: backColor,
-                          border: Border.all(
-                            color: borderColor,
+                            setState(() {});
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: screenSize.width * 0.20,
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                                color: backColor,
+                                border: Border.all(
+                                  color: borderColor,
+                                ),
+                                borderRadius: BorderRadius.all(Radius.circular(20))),
+                            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            child: Text(
+                              categoriesList[index],
+                              style: TextStyle(color: textColor),
+                            ),
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
-                      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      child: Text(
-                        categoriesList[index],
-                        style: TextStyle(color: textColor),
-                      ),
+                        );
+                      },
+                      itemCount: categoriesList.length,
                     ),
-                  );
-                },
-                itemCount: categoriesList.length,
-              ),
             ),
             makeMyListView(),
           ],
@@ -169,6 +160,9 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   void initState() {
+    getAllProducts();
+    getAllCategories();
+
     startTimer();
     super.initState();
   }
@@ -186,8 +180,6 @@ class _ExplorePageState extends State<ExplorePage> {
       }
 
       controller.jumpToPage(sliderPageIndex);
-
-      //print("currentPage:" + sliderPageIndex.toString());
     });
   }
 
@@ -215,7 +207,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           Container(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
+                              child: Image.network(
                                 productList[index].imageAddress,
                                 width: 120,
                                 height: 120,
@@ -228,8 +220,21 @@ class _ExplorePageState extends State<ExplorePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(productList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                              Text(productList[index].description, style: TextStyle(fontSize: 16)),
+                              Container(
+                                width: 250,
+                                child: Text(productList[index].name,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                              ),
+                              Container(
+                                  width: 250,
+                                  height: 50,
+                                  child: Text(productList[index].description,
+                                      overflow: TextOverflow.fade, style: TextStyle(fontSize: 16))),
                               Text(
                                 dolor + productList[index].price.toString(),
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -273,7 +278,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         Container(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.asset(
+                            child: Image.network(
                               productList[index].imageAddress,
                               //width: 120,
                               height: 150,
@@ -322,6 +327,16 @@ class _ExplorePageState extends State<ExplorePage> {
           ));
     }
   }
+
+  void getAllProducts() async {
+    productList = await ApiService.getAllProducts();
+    setState(() {});
+  }
+
+  void getAllCategories() async {
+    categoriesList = await ApiService.getAllCategories();
+    setState(() {});
+  }
 }
 
 class Product {
@@ -339,6 +354,14 @@ class Product {
         json["price"],
         json["imageAddress"],
         json["isFavorite"],
+      );
+
+  factory Product.fromApiJson(Map<String, dynamic> json) => Product(
+        json["title"],
+        json["description"],
+        json["price"].round(),
+        json["image"],
+        false,
       );
 
   Map<String, dynamic> toJson() {

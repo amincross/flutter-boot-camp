@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'explore_page.dart';
@@ -111,7 +112,9 @@ class _BagPageState extends State<BagPage> {
                                           color: Colors.grey,
                                         ),
                                         onTap: () {
-                                          deleteProductFromStorage(index);
+                                          _showDeleteDialog(index);
+
+                                          //deleteProductFromStorage(index);
                                         },
                                       ),
                                     ],
@@ -222,6 +225,48 @@ class _BagPageState extends State<BagPage> {
     // ذخیره کل لیست
     await storage.setString('cart', jsonEncode(temp).toString());
 
+    Fluttertoast.showToast(
+        msg: "محصول از سبد حذف شد",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        textColor: Colors.black,
+        fontSize: 16.0);
+
     readFromStorage();
+  }
+
+  Future<void> _showDeleteDialog(int index) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('آیا مطمئن هستید؟'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('برای حذف محصول تایید کنید'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('بازگشت'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('حذف'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteProductFromStorage(index);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
