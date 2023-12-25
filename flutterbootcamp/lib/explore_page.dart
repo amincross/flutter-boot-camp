@@ -29,11 +29,10 @@ class _ExplorePageState extends State<ExplorePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: Text("Explore", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 28)),
-      ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          title: Text("Explore", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 28))),
       body: SingleChildScrollView(
         child: Column(
           children: [

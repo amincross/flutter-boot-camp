@@ -67,7 +67,7 @@ class _BagPageState extends State<BagPage> {
                               Container(
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: Image.asset(
+                                  child: Image.network(
                                     currentProduct.imageAddress,
                                     width: 120,
                                     height: 120,
@@ -80,8 +80,25 @@ class _BagPageState extends State<BagPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text(currentProduct.name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                  Text(currentProduct.description, style: TextStyle(fontSize: 16)),
+                                  Container(
+                                    width: 250,
+                                    child: Text(
+                                      currentProduct.name,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 250,
+                                    child: Text(currentProduct.description,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        )),
+                                  ),
                                   Text(
                                     "\$ " + currentProduct.price.toString(),
                                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -244,10 +261,13 @@ class _BagPageState extends State<BagPage> {
         return AlertDialog(
           title: const Text('آیا مطمئن هستید؟'),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('برای حذف محصول تایید کنید'),
-              ],
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: ListBody(
+                children: <Widget>[
+                  Text('برای حذف محصول تایید کنید'),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[

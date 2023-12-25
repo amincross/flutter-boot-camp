@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterbootcamp/app_theme.dart';
 
 import 'explore_page.dart';
 
@@ -14,9 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: appTheme,
       home: ExplorePage(),
     );
   }

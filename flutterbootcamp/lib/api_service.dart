@@ -20,7 +20,9 @@ class ApiService {
 
   static Future<List<String>> getAllCategories() async {
     var url = Uri.parse("https://fakestoreapi.com/products/categories");
+
     var response = await http.get(url);
+
     List<dynamic> json = jsonDecode(response.body);
 
     List<String> categoriesList = List<String>.from(json as List);
